@@ -1,0 +1,24 @@
+services:
+  utility_node_api:
+    container_name: utility_node_api
+    build: .
+    ports:
+      - 3000:3000
+    depends_on:
+      - utility_mysql_database
+    volumes:
+      - .:/usr/www
+
+  utility_mysql_database:
+    container_name: utility_mysql_database
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    volumes:
+      - mysqldata:/data/db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+
+volumes:
+  mysqldata:

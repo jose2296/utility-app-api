@@ -1,0 +1,50 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["omitApi"]
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("MYSQL_DATABASE_URL")
+}
+
+model users {
+    id         Int          @id @default(autoincrement())
+    email      String       @unique
+    name       String?
+    password   String
+    create_at  DateTime     @default(now())
+    update_at  DateTime     @default(now()) @updatedAt()
+    categories categories[]
+    tasks      tasks[]
+}
+
+model categories {
+    id        Int      @id @default(autoincrement())
+    name      String
+    user_id   Int
+    user      users    @relation(fields: [user_id], references: [id])
+    create_at DateTime @default(now())
+    update_at DateTime @default(now()) @updatedAt()
+    notes     notes[]
+}
+
+model notes {
+    id          Int        @id @default(autoincrement())
+    name        String
+    category_id Int
+    category    categories @relation(fields: [category_id], references: [id])
+    create_at   DateTime   @default(now())
+    update_at   DateTime   @default(now()) @updatedAt()
+}
+
+model tasks {
+    id          Int      @id @default(autoincrement())
+    title       String
+    description String
+    completed   Boolean  @default(false)
+    user_id     Int
+    user        users    @relation(fields: [user_id], references: [id])
+    create_at   DateTime @default(now())
+    update_at   DateTime @default(now()) @updatedAt()
+}
